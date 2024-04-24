@@ -31,7 +31,7 @@ namespace Tests
         }
 
         [Fact]
-        public async Task MappingTest()
+        public async Task Customer_Car_Engine_Mapping()
         {
             var customer = new Customer
             {
@@ -44,6 +44,10 @@ namespace Tests
             {
                 Brand = "BWM",
                 Customer = customer,
+                Engine = new Engine
+                {
+                    SerialNumber = "1234"
+                }
             };
 
             await _dbContext.AddAsync(car);
@@ -51,6 +55,37 @@ namespace Tests
             await _dbContext.SaveChangesAsync();
 
             var customers = await _dbContext.Customers.ToListAsync();
+
+            Assert.Single(customers);
+        }
+
+
+        [Fact]
+        public async Task Car_Mechanic_Mapping()
+        {
+            var car = new Car
+            {
+                Brand = "BWM",
+                Engine = new Engine
+                {
+                    SerialNumber = "1234"
+                },
+                Mechanics = new List<Mechanic>
+                {
+                    new Mechanic
+                    {
+                        Name = "Peter",
+                        Surname = "Parker",
+                        DateOfBirth = DateTimeOffset.Now
+                    }
+                }
+            };
+
+            await _dbContext.AddAsync(car);
+
+            await _dbContext.SaveChangesAsync();
+
+            var customers = await _dbContext.Cars.ToListAsync();
 
             Assert.Single(customers);
         }
