@@ -1,18 +1,54 @@
+using DataAccess;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using Xunit.Abstractions;
 
 namespace Tests
 {
-    public class DbContextFixture : SqlLiteConnection
+    public class SqlServerDbContextFixture : SqlServerConnection
     {
-        [Fact]
-        public async Task Test1()
-        {
-            var connectionRestult = await _dbContext.Database.CanConnectAsync();
+        private readonly ITestOutputHelper output;
 
-            Assert.True(connectionRestult);
+        public SqlServerDbContextFixture(ITestOutputHelper output)
+        {
+            this.output = output;
         }
 
+        private void LogToOutput(string test, string message)
+        {
+            output.WriteLine($"{test}: {message}");
+        }
+
+        //[Fact]
+        public void DoesMyContextBuild_IEIsMyMappingsValid()
+        {
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                    .UseSqlServer(base.connectionstring)
+                    .EnableDetailedErrors()
+                    .EnableSensitiveDataLogging()
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTrackingWithIdentityResolution)
+                    .Options;
+
+            var dbContext = new ApplicationDbContext(options);
+            Assert.True(dbContext.Database.CanConnect());
+        }
+
+        [Fact]
+        public void ReadCustomer()
+        {
+            var query = _dbContext.Set<Customer>().Include(x => x.Cars).Where(c => c.Id > 0).ToQueryString();
+            LogToOutput(nameof(ReadCustomer), query);
+        }
+
+        [Fact]
+        public void ReadCarWithMechanic()
+        {
+            var query = _dbContext.Set<Car>().Include(x => x.Mechanics).Where(c => c.EngineId > 0).ToQueryString();
+            LogToOutput(nameof(ReadCarWithMechanic),query);
+
+        }
+
+        /*
         [Fact]
         public async Task AddEntity()
         {
@@ -90,5 +126,6 @@ namespace Tests
 
             Assert.Single(customers);
         }
+        */
     }
 }

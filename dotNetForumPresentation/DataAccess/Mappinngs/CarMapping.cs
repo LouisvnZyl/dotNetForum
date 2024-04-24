@@ -2,25 +2,35 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DataAccess.Mappinngs
+namespace DataAccess.Mappinngs;
+
+internal class CarCustomerOnlyMapping(bool mapEngine = false, bool mapMechanic = false) : IEntityTypeConfiguration<Car>
 {
-    internal class CarMapping : IEntityTypeConfiguration<Car>
+    public void Configure(EntityTypeBuilder<Car> builder)
     {
-        public void Configure(EntityTypeBuilder<Car> builder)
-        {
-            builder.ToTable(nameof(Car));
+        builder.HasKey(x => x.EngineId);
+        if (!mapEngine)
+            builder.Ignore(x => x.Engine);
 
-            builder.HasOne(car => car.Engine)
-                   .WithOne(engine => engine.Car)
-                   .HasPrincipalKey<Engine>(x => x.Id)
-                   .HasForeignKey<Car>(x => x.EngineId);
+        if (!mapMechanic)
+            builder.Ignore(x => x.Mechanics);
+    }
+}
 
-            builder.HasKey(x => x.EngineId);
+internal class CarWithEngineMapping : IEntityTypeConfiguration<Car>
+{
+    public void Configure(EntityTypeBuilder<Car> builder)
+    {
+        builder.HasOne(car => car.Engine)
+               .WithOne(engine => engine.Car)
+               .HasPrincipalKey<Engine>(x => x.Id)
+               .HasForeignKey<Car>(x => x.EngineId);
 
-            //builder.HasOne(car => car.Engine)
-            //       .WithOne(engine => engine.Car)
-            //       .HasForeignKey<Car>(x => x.EngineId)
-            //       .HasPrincipalKey<Engine>(x => x.Id);
-        }
+        builder.HasKey(x => x.EngineId);
+
+        //builder.HasOne(car => car.Engine)
+        //       .WithOne(engine => engine.Car)
+        //       .HasForeignKey<Car>(x => x.EngineId)
+        //       .HasPrincipalKey<Engine>(x => x.Id);
     }
 }
