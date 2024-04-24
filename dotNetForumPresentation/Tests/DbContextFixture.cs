@@ -59,7 +59,6 @@ namespace Tests
             Assert.Single(customers);
         }
 
-
         [Fact]
         public async Task Car_Mechanic_Mapping()
         {
@@ -86,6 +85,8 @@ namespace Tests
             await _dbContext.SaveChangesAsync();
 
             var customers = await _dbContext.Cars.ToListAsync();
+
+            var sqlString = _dbContext.Cars.Where(car => car.Brand == "BMW").ToQueryString();
 
             Assert.Single(customers);
         }
