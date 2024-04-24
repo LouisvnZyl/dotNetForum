@@ -5,6 +5,11 @@ namespace Tests
 {
     public class UnitTest1 : SqlLiteConnection
     {
+        public UnitTest1()
+        {
+            DataSeeder.SeedData(_dbContext);
+        }
+
         [Fact]
         public async Task Test1()
         {
@@ -42,7 +47,12 @@ namespace Tests
 
             var car = new Car
             {
-                Brand = "BWM",
+                Manufacturer = new Manufacturer
+                {
+                    Id = 1,
+                    Name = "BMW",
+                    Location = "Pretoria"
+                },
                 Customer = customer,
                 Engine = new Engine
                 {
@@ -64,7 +74,11 @@ namespace Tests
         {
             var car = new Car
             {
-                Brand = "BWM",
+                Manufacturer = new Manufacturer
+                {
+                    Name = "BMW",
+                    Location = "Pretoria"
+                },
                 Engine = new Engine
                 {
                     SerialNumber = "1234"
@@ -86,7 +100,14 @@ namespace Tests
 
             var customers = await _dbContext.Cars.ToListAsync();
 
-            var sqlString = _dbContext.Cars.Where(car => car.Brand == "BMW").ToQueryString();
+            var sqlString = _dbContext.Cars
+                                      .Where(car => car.Manufacturer.Name == "BMW")
+                                      .Select(car => new
+                                      {
+                                          Name = car.Manufacturer.Name,
+                                          Mechanic = car.Mechanics.Where(mechanic => mechanic.Name == "Peter").FirstOrDefault()
+                                      })
+                                      .ToQueryString();
 
             Assert.Single(customers);
         }
