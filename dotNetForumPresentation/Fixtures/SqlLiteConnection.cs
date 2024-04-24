@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fixtures
 {
-    public abstract class SqlLiteConnection: IDisposable
+    public abstract class SqlLiteConnection : IDisposable
     {
         private const string InMemoryConnectionString = "DataSource=:memory:";
         private readonly SqliteConnection _connection;
@@ -18,8 +18,8 @@ namespace Fixtures
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                     .UseSqlite(_connection)
                     .Options;
-            var context = new ApplicationDbContext(options);
-            context.EnsureCreated();
+            this._dbContext = new ApplicationDbContext(options);
+            this._dbContext.Database.EnsureCreated();
         }
 
         public void Dispose()
