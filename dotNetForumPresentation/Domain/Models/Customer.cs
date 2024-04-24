@@ -7,11 +7,11 @@
         public string Surname { get; set; } = string.Empty;
         public string Age { get; set; } = string.Empty;
 
-        public Car? Car { get; set; }
+        public List<Car> Cars { get; set; } = new List<Car>();
 
-        public void AssignCar(Car newCar)
+        public void AddCar(Car newCar)
         {
-            this.Car = newCar;
+            this.Cars.Add(newCar);
         }
 
         public void UpdateCredentials(string name, string surname)
