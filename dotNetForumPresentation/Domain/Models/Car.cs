@@ -5,6 +5,8 @@
         // This is how we map if you want to share a primary key value
 
         public int Id { get; set; }
+        public string? Name { get; set; }
+        public string? Type { get; set; }
 
         public Manufacturer Manufacturer { get; set; } = null!;
         public Customer? Customer { get; set; }

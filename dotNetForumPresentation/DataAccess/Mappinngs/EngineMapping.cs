@@ -9,6 +9,10 @@ namespace DataAccess.Mappinngs
         public void Configure(EntityTypeBuilder<Engine> builder)
         {
             builder.ToTable(nameof(Engine));
+
+            builder.HasKey(x => x.Id);
+
+            builder.Property(x => x.Id).ValueGeneratedOnAdd();
         }
     }
 }

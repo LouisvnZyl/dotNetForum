@@ -7,7 +7,9 @@ namespace Tests
     {
         public UnitTest1()
         {
-            DataSeeder.SeedData(_dbContext);
+            //DataSeeder.SeedData(_dbContext);
+            BogusSeeder bogusSeeder = new BogusSeeder(_dbContext, 12345);
+            bogusSeeder.SeedDatabaseWithBogusValues();
         }
 
         [Fact]

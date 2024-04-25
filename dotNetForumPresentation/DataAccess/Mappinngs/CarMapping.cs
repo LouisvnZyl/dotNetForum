@@ -10,6 +10,10 @@ namespace DataAccess.Mappinngs
         {
             builder.ToTable(nameof(Car));
 
+            builder.HasKey(x => x.Id);
+
+            builder.Property(x => x.Id).ValueGeneratedOnAdd();
+
             //builder.HasOne(car => car.Engine)
             //       .WithOne(engine => engine.Car)
             //       .HasPrincipalKey<Engine>(x => x.Id)
