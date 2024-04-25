@@ -1,6 +1,7 @@
 ﻿using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Mappinngs;
+using Domain.Models.Cars;
 
 namespace DataAccess
 {
@@ -25,12 +26,24 @@ namespace DataAccess
             modelBuilder.ApplyConfiguration(new CarCustomerOnlyMapping(mapMechanic: true));
             modelBuilder.ApplyConfiguration(new MechanicValueConversionMapping());
 
+
+            //*Modeling inheritance: https://learn.microsoft.com/en-us/ef/core/modeling/inheritance*//
             /*Table Per Hierarchy
              * Adding the two derived types' mappings (they're empty), causes EF to apply Table Per Hierarchy mapping by convention
              TPH: nullable columns in the Car table*/
             modelBuilder.ApplyConfiguration(new BakkieCarsMapping());
             modelBuilder.ApplyConfiguration(new SchoolBusMapping());
 
+            /*TPType
+             You will get 3 tables: one for the base type, and one each for the derived types
+            modelBuilder.Entity<Car>().UseTptMappingStrategy();
+  */
+            /*TPDiscreet
+             You will get two tables: one per derived type, with "duplicate" columns for the base class
+            This is "new" as in EFCore 7
+            modelBuilder.Entity<Car>().UseTpcMappingStrategy();
+            */
+            
             //modelBuilder.ApplyConfigurationsFromAssembly(this.GetType().Assembly);
         }
     }
