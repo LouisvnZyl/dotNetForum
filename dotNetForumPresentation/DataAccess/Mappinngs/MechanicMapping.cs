@@ -14,8 +14,8 @@ namespace DataAccess.Mappinngs
 
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
-            builder.Property(x => x.DateOfBirth)
-                   .HasConversion(toDb => toDb.UtcTicks, fromDb =>  DateTimeOffset.MinValue.AddTicks(fromDb));
+            //builder.Property(x => x.DateOfBirth)
+            //       .HasConversion(toDb => toDb.UtcTicks, fromDb =>  DateTimeOffset.MinValue.AddTicks(fromDb));
         }
     }
 }

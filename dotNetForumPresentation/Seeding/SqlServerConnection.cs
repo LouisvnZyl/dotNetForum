@@ -1,18 +1,18 @@
 ﻿using DataAccess;
 using Microsoft.EntityFrameworkCore;
 
-namespace Tests
+namespace Seeding
 {
-    public abstract class SqlServerConnection : IDisposable
+    public class SqlServerConnection : IDisposable
     {
-        protected readonly string connectionstring = "Server=localhost;Database=netForum;Integrated Security=SSPI;TrustServerCertificate=true";
+        protected readonly string connectionstring = "Server=ERNESSMI-PC\\MSSQLSERVER2;Database=netForum;;user id=sa;password=P@ssword123;TrustServerCertificate=true";
 
         protected readonly ApplicationDbContext _dbContext;
 
-        protected SqlServerConnection()
+        public SqlServerConnection()
         {
 
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            DbContextOptions<ApplicationDbContext> options = new DbContextOptionsBuilder<ApplicationDbContext>()
                     .UseSqlServer(connectionstring)
                     .Options;
 

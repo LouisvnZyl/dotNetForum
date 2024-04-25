@@ -4,6 +4,10 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
+        BogusSeeder bogusSeeder = new BogusSeeder(1234);
+
+        bogusSeeder.SeedDatabaseWithBogusValues();
+
+        Console.ReadKey(); 
     }
 }
