@@ -12,8 +12,8 @@
         public int EngineId { get; set; }
         public Engine Engine { get; set; } = null!;
 
-        //public List<Mechanic> Mechanics { get; set; } = new List<Mechanic>();
+        public List<Mechanic> Mechanics { get; set; } = new List<Mechanic>();
 
-        public List<CarMechanic> CarMechanics { get; set; } = new List<CarMechanic>();
+        //public List<CarMechanic> CarMechanics { get; set; } = new List<CarMechanic>();
     }
 }

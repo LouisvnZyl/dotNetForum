@@ -8,7 +8,6 @@
         public string FeulEfficiency { get; set; } = string.Empty;
         public string SerialNumber { get; set; } = string.Empty;
 
-        
         public Car Car { get; set; } = null!;
     }
 }

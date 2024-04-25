@@ -148,9 +148,7 @@ namespace Tests
 
             await _dbContext.SaveChangesAsync();
 
-            // Ask why this will work
-
-            car.CarMechanics.Where(carMechanic => carMechanic.CarId == car.Id).First().Completed = true;
+            //car.CarMechanics.Where(carMechanic => carMechanic.CarId == car.Id).First().Completed = true;
 
             await _dbContext.SaveChangesAsync();
         }

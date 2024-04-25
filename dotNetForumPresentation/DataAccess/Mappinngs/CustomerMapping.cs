@@ -10,10 +10,10 @@ namespace DataAccess.Mappinngs
         {
             builder.ToTable(nameof(Customer));
 
-            builder.HasKey(customer => customer.Id);
+        //    builder.HasKey(customer => customer.Id);
 
-            builder.HasMany(customer => customer.Cars)
-                   .WithOne(car => car.Customer);
-        }
+        //    builder.HasMany(customer => customer.Cars)
+        //           .WithOne(car => car.Customer);
+        //}
     }
 }

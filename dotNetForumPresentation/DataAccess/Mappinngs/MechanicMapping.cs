@@ -10,9 +10,9 @@ namespace DataAccess.Mappinngs
         {
             builder.ToTable("Mechanic");
 
-            builder.HasMany(mechanic => mechanic.CarMechanics)
-                   .WithOne(carMechanic => carMechanic.Mechanic)
-                   .HasForeignKey(carMechanic => carMechanic.MechanicId);
+            //builder.HasMany(mechanic => mechanic.CarMechanics)
+            //       .WithOne(carMechanic => carMechanic.Mechanic)
+            //       .HasForeignKey(carMechanic => carMechanic.MechanicId);
 
             //builder.HasKey(x => x.Id);
 

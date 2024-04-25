@@ -10,7 +10,7 @@ namespace DataAccess.Mappinngs
         {
             builder.ToTable(nameof(CarMechanic));
 
-            builder.HasKey(cm => new { cm.CarId, cm.MechanicId });
+            //builder.HasKey(cm => new { cm.CarId, cm.MechanicId });
         }
     }
 }
