@@ -182,6 +182,78 @@ namespace Tests
         [Fact]
         public async Task Complex_EF_Queries()
         {
+            var carDetails = await _dbContext.Cars
+                                             .Select(car => new
+                                             {
+                                                 car.EngineId,
+                                                 car.Manufacturer.Id,
+                                                 car.Engine.SerialNumber,
+                                                 car.Manufacturer.Location
+                                             })
+                                             .OrderBy(x => x.SerialNumber)
+                                             .ToListAsync();
+
+            var carDetailsQuery = _dbContext.Cars
+                                             .Select(car => new
+                                             {
+                                                 car.EngineId,
+                                                 car.Manufacturer.Id,
+                                                 car.Engine.SerialNumber,
+                                                 car.Manufacturer.Location
+                                             })
+                                             .OrderBy(x => x.SerialNumber)
+                                             .ToQueryString();
+
+
+            var customerCarDetails = await _dbContext.Customers
+                                                     .Select(customer => new
+                                                     {
+                                                         CustomerName = customer.Name + " " + customer.Surname,
+                                                         CustomerCars = customer.Cars.Select(car => new
+                                                         {
+                                                             car.Id,
+                                                             car.Manufacturer,
+                                                             car.Engine.FeulEfficiency
+                                                         })
+                                                     }).ToListAsync();
+
+            var customerCarDetailsQuery = _dbContext.Customers
+                                                     .Select(customer => new
+                                                     {
+                                                         CustomerName = customer.Name + " " + customer.Surname,
+                                                         CarDetails = customer.Cars.Select(car => new
+                                                         {
+                                                             car.Id,
+                                                             car.Manufacturer,
+                                                             car.Engine.FeulEfficiency
+                                                         })
+                                                     }).ToQueryString();
+
+            var selectManyCustomerCars =  await _dbContext.Customers
+                                                   .SelectMany(customer => customer.Cars,
+                                                   (customer, car) => new
+                                                   {
+                                                       CustomerName = customer.Name + " " + customer.Surname,
+                                                       CarDetails = new
+                                                       {
+                                                           car.Id,
+                                                           car.Manufacturer,
+                                                           car.Engine.FeulEfficiency
+                                                       }
+                                                   }).ToListAsync();
+
+            var selectManyCustomerCarsQuery = _dbContext.Customers
+                                                   .SelectMany(customer => customer.Cars,
+                                                   (customer, car) => new
+                                                   {
+                                                       CustomerName = customer.Name + " " + customer.Surname,
+                                                       CarDetails = new
+                                                       {
+                                                           car.Id,
+                                                           car.Manufacturer,
+                                                           car.Engine.FeulEfficiency
+                                                       }
+                                                   }).ToQueryString();
         }
     }
 }
