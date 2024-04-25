@@ -24,6 +24,13 @@ namespace DataAccess
             modelBuilder.ApplyConfiguration(new EmptyCustomerMapping());
             modelBuilder.ApplyConfiguration(new CarCustomerOnlyMapping(mapMechanic: true));
             modelBuilder.ApplyConfiguration(new MechanicValueConversionMapping());
+
+            /*Table Per Hierarchy
+             * Adding the two derived types' mappings (they're empty), causes EF to apply Table Per Hierarchy mapping by convention
+             TPH: nullable columns in the Car table*/
+            modelBuilder.ApplyConfiguration(new BakkieCarsMapping());
+            modelBuilder.ApplyConfiguration(new SchoolBusMapping());
+
             //modelBuilder.ApplyConfigurationsFromAssembly(this.GetType().Assembly);
         }
     }

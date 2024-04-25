@@ -1,5 +1,6 @@
 using DataAccess;
 using Domain.Models;
+using Domain.Models.Cars;
 using Microsoft.EntityFrameworkCore;
 using Xunit.Abstractions;
 
@@ -16,10 +17,10 @@ namespace Tests
 
         private void LogToOutput(string test, string message)
         {
-            output.WriteLine($"{test}: {message}");
+            output.WriteLine($"{test}:\n {message}");
         }
 
-        //[Fact]
+        [Fact]
         public void DoesMyContextBuild_IEIsMyMappingsValid()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -30,6 +31,7 @@ namespace Tests
                     .Options;
 
             var dbContext = new ApplicationDbContext(options);
+            dbContext.Database.EnsureCreated();
             Assert.True(dbContext.Database.CanConnect());
         }
 
@@ -46,6 +48,18 @@ namespace Tests
             var query = _dbContext.Set<Car>().Include(x => x.Mechanics).Where(c => c.EngineId > 0).ToQueryString();
             LogToOutput(nameof(ReadCarWithMechanic),query);
 
+        }
+
+        /*
+         * By convention, EF will not automatically scan for base or derived types; 
+         * this means that if you want a CLR type in your hierarchy to be mapped, you must explicitly specify that type on your model. 
+         * For example, specifying only the base type of a hierarchy will not cause EF Core to implicitly include all of its sub-types.
+         */
+        [Fact]
+        public void ReadDerivedCarAndNoticeTheDiscriminator()
+        {
+            var query = _dbContext.Set<SchoolBus>().Where(c => c.EngineId > 0).ToQueryString();
+            LogToOutput(nameof(ReadDerivedCarAndNoticeTheDiscriminator), query);
         }
 
         /*
