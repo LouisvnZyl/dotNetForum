@@ -19,12 +19,12 @@ namespace Tests
         }
 
         [Fact]
-        public async Task AddEntity()
+        public async Task SignleEntity_NoRelationships()
         {
             var mechanic = new Mechanic
             {
-                Name = "Test",
-                Surname = "Test",
+                Name = "Demo",
+                Surname = "Demoson",
                 DateOfBirth = DateTime.UtcNow,
             };
 
@@ -33,27 +33,51 @@ namespace Tests
             await _dbContext.SaveChangesAsync();
 
             var mechanics = await _dbContext.Mechanics.ToListAsync();
+
+            var query = _dbContext.Mechanics.ToQueryString();
+        }
+
+        [Fact]
+        public async Task Update_SignleEntity_NoRelationships()
+        {
+            var mechanic = new Mechanic
+            {
+                Name = "Demo",
+                Surname = "Demoson",
+                DateOfBirth = DateTime.UtcNow,
+            };
+
+            await _dbContext.AddAsync(mechanic);
+
+            await _dbContext.SaveChangesAsync();
+
+           var mechanicEntity = await _dbContext.Mechanics
+                                                .Where(mechanic => mechanic.Name == "Demo")
+                                                .FirstOrDefaultAsync();
+
+            var query = _dbContext.Mechanics
+                                  .Where(mechanic => mechanic.Name == "Demo")
+                                  .ToQueryString();
+
+            mechanicEntity!.Name = mechanic.Name + "Updated";
+
+            await _dbContext.SaveChangesAsync();
+
+            var updatedMechanicEntity = await _dbContext.Mechanics
+                                                        .Where(mechanic => mechanic.Name == "DemoUpdated")
+                                                        .FirstOrDefaultAsync();
         }
 
         [Fact]
         public async Task Customer_Car_Engine_Mapping()
         {
-            var customer = new Customer
-            {
-                Name = "Test",
-                Surname = "Test",
-                Age = "20"
-            };
-
             var car = new Car
             {
                 Manufacturer = new Manufacturer
                 {
-                    Id = 1,
                     Name = "BMW",
                     Location = "Pretoria"
                 },
-                Customer = customer,
                 Engine = new Engine
                 {
                     SerialNumber = "1234"
@@ -66,7 +90,21 @@ namespace Tests
 
             var customers = await _dbContext.Customers.ToListAsync();
 
-            Assert.Single(customers);
+            var cars = await _dbContext.Cars.ToListAsync();
+
+            var customerEntity = await _dbContext.Customers
+                                                 .Where(customer => customer.Name == "James")
+                                                 .FirstOrDefaultAsync();
+
+            var carEntity = await _dbContext.Cars
+                                            .Where(car => car.Manufacturer.Name == "BMW" && 
+                                                          car.Engine.SerialNumber == "1234")
+                                            .FirstOrDefaultAsync();
+
+            var carEntityQuery = _dbContext.Cars
+                                           .Where(car => car.Manufacturer.Name == "BMW" &&
+                                                         car.Engine.SerialNumber == "1234")
+                                           .ToQueryString();
         }
 
         [Fact]
