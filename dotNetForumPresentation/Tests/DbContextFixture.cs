@@ -11,14 +11,6 @@ namespace Tests
         }
 
         [Fact]
-        public async Task Test1()
-        {
-            var connectionRestult = await _dbContext.Database.CanConnectAsync();
-
-            Assert.True(connectionRestult);
-        }
-
-        [Fact]
         public async Task SignleEntity_NoRelationships()
         {
             var mechanic = new Mechanic
@@ -161,6 +153,35 @@ namespace Tests
             car.CarMechanics.Where(carMechanic => carMechanic.CarId == car.Id).First().Completed = true;
 
             await _dbContext.SaveChangesAsync();
+        }
+
+        [Fact]
+        public async Task EF_Tracking()
+        {
+            var customerEntity = await _dbContext.Customers
+                                                 .Where(customer => customer.Name == "James")
+                                                 .FirstOrDefaultAsync();
+
+            customerEntity!.UpdateCredentials(customerEntity.Name + "Updated", customerEntity.Surname + "Updated");
+
+            await _dbContext.SaveChangesAsync();
+
+            var updatedCustomerEntity = await _dbContext.Customers
+                                                        .AsNoTracking()
+                                                        .Where(customer => customer.Name == "JamesUpdated")
+                                                        .FirstOrDefaultAsync();
+
+            updatedCustomerEntity!.UpdateCredentials(customerEntity.Name + "Updated2", customerEntity.Surname + "Updated2");
+
+            await _dbContext.SaveChangesAsync();
+
+            var customers = await _dbContext.Customers
+                                            .ToListAsync();
+        }
+
+        [Fact]
+        public async Task Complex_EF_Queries()
+        {
         }
     }
 }
