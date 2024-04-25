@@ -74,14 +74,14 @@ namespace Tests
                         Surname = "van Zyl",
                         Age = "25"
                     },
-                    //Mechanics = new List<Mechanic>
-                    //{
-                    //    new Mechanic {
-                    //    Name = "Peter",
-                    //    Surname = "Parker",
-                    //    DateOfBirth = DateTimeOffset.Now
-                    //    }
-                    //}
+                    Mechanics = new List<Mechanic>
+                    {
+                        new Mechanic {
+                        Name = "Peter",
+                        Surname = "Parker",
+                        DateOfBirth = DateTimeOffset.Now
+                        }
+                    }
                 }
             };
 
