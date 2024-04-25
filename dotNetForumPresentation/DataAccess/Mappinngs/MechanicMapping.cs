@@ -10,10 +10,14 @@ namespace DataAccess.Mappinngs
         {
             builder.ToTable("Mechanic");
 
-            builder.HasKey(x => x.Id);
+            builder.HasMany(mechanic => mechanic.CarMechanics)
+                   .WithOne(carMechanic => carMechanic.Mechanic)
+                   .HasForeignKey(carMechanic => carMechanic.MechanicId);
 
-            builder.Property(x => x.DateOfBirth)
-                   .HasConversion(toDb => toDb.UtcTicks, fromDb =>  DateTimeOffset.MinValue.AddTicks(fromDb));
+            //builder.HasKey(x => x.Id);
+
+            //builder.Property(x => x.DateOfBirth)
+            //       .HasConversion(toDb => toDb.UtcTicks, fromDb =>  DateTimeOffset.MinValue.AddTicks(fromDb));
         }
     }
 }

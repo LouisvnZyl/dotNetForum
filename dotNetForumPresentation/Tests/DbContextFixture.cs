@@ -51,9 +51,9 @@ namespace Tests
 
             await _dbContext.SaveChangesAsync();
 
-           var mechanicEntity = await _dbContext.Mechanics
-                                                .Where(mechanic => mechanic.Name == "Demo")
-                                                .FirstOrDefaultAsync();
+            var mechanicEntity = await _dbContext.Mechanics
+                                                 .Where(mechanic => mechanic.Name == "Demo")
+                                                 .FirstOrDefaultAsync();
 
             var query = _dbContext.Mechanics
                                   .Where(mechanic => mechanic.Name == "Demo")
@@ -97,7 +97,7 @@ namespace Tests
                                                  .FirstOrDefaultAsync();
 
             var carEntity = await _dbContext.Cars
-                                            .Where(car => car.Manufacturer.Name == "BMW" && 
+                                            .Where(car => car.Manufacturer.Name == "BMW" &&
                                                           car.Engine.SerialNumber == "1234")
                                             .FirstOrDefaultAsync();
 
@@ -105,6 +105,17 @@ namespace Tests
                                            .Where(car => car.Manufacturer.Name == "BMW" &&
                                                          car.Engine.SerialNumber == "1234")
                                            .ToQueryString();
+
+            customerEntity!.Cars.Add(carEntity!);
+            //car.Customer = customerEntity;
+            //car.CustomerId = customerEntity!.Id;
+
+            await _dbContext.SaveChangesAsync();
+
+            var updatedCarEntity = await _dbContext.Cars
+                                                   .Where(car => car.Manufacturer.Name == "BMW" &&
+                                                                 car.Engine.SerialNumber == "1234")
+                                                   .FirstOrDefaultAsync();
         }
 
         [Fact]
@@ -120,34 +131,36 @@ namespace Tests
                 Engine = new Engine
                 {
                     SerialNumber = "1234"
-                },
-                Mechanics = new List<Mechanic>
-                {
-                    new Mechanic
-                    {
-                        Name = "Peter",
-                        Surname = "Parker",
-                        DateOfBirth = DateTimeOffset.Now
-                    }
                 }
             };
 
+            var mechanic = new Mechanic
+            {
+                Name = "Peter",
+                Surname = "Parker",
+                DateOfBirth = DateTimeOffset.Now
+            };
+
             await _dbContext.AddAsync(car);
+            await _dbContext.AddAsync(mechanic);
 
             await _dbContext.SaveChangesAsync();
 
-            var customers = await _dbContext.Cars.ToListAsync();
+            var carMechanic = new CarMechanic
+            {
+                CarId = car.Id,
+                MechanicId = mechanic.Id
+            };
 
-            var sqlString = _dbContext.Cars
-                                      .Where(car => car.Manufacturer.Name == "BMW")
-                                      .Select(car => new
-                                      {
-                                          Name = car.Manufacturer.Name,
-                                          Mechanic = car.Mechanics.Where(mechanic => mechanic.Name == "Peter").FirstOrDefault()
-                                      })
-                                      .ToQueryString();
+            await _dbContext.AddAsync(carMechanic);
 
-            Assert.Single(customers);
+            await _dbContext.SaveChangesAsync();
+
+            // Ask why this will work
+
+            car.CarMechanics.Where(carMechanic => carMechanic.CarId == car.Id).First().Completed = true;
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

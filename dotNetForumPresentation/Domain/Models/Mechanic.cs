@@ -7,6 +7,8 @@
         public string Surname { get; set; } = string.Empty;
         public DateTimeOffset DateOfBirth { get; set; }
 
-        public List<Car> Cars { get; set; } = new List<Car>();
+        //public List<Car> Cars { get; set; } = new List<Car>();
+
+        public List<CarMechanic> CarMechanics { get; set; } = new List<CarMechanic>();
     }
 }
